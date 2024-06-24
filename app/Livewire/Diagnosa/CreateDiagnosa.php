@@ -74,85 +74,25 @@ class CreateDiagnosa extends Component
 
         $hasil = $max * 100;
 
-        $validate = $this->validate();
-        $validate['user_id'] = auth()->user()->id;
-        $validate['penyakit_id'] = $penyakitId;
-        $validate['kode_diagnosa'] = 'diagnosa_' . time();
-        $validate['pilihan_gejala'] = json_encode($this->bobot);
-        $validate['hasil'] = $hasil;
+        if ($hasil < 40) {
+            $this->dialog()->info(
+                $title = 'Information!',
+                $description = 'Youare Healthy'
+            );
+        } else {
+            $validate = $this->validate();
+            $validate['user_id'] = auth()->user()->id;
+            $validate['penyakit_id'] = $penyakitId;
+            $validate['kode_diagnosa'] = 'diagnosa_' . time();
+            $validate['pilihan_gejala'] = json_encode($this->bobot);
+            $validate['hasil'] = $hasil;
 
-        $diagnosa = Diagnosa::create($validate);
+            $diagnosa = Diagnosa::create($validate);
 
-        $this->redirect(route('diagnosa.show', $diagnosa->id), navigate: true);
+            $this->redirect(route('diagnosa.show', $diagnosa->id), navigate: true);
+        }
     }
 
-    // public function save()
-    // {
-    //     $cfPakar = Gejala::latest()->get();
-
-    //     $cfUserXcfPakar = [];
-    //     foreach ($this->bobot as $index => $cfUser) {
-    //         foreach ($cfPakar as $cfp) {
-    //             if ($index == $cfp->kode_gejala) {
-    //                 array_push($cfUserXcfPakar, [
-    //                     'penyakit_id' => $cfp->penyakit_id,
-    //                     'kode_gejala' => $cfp->kode_gejala,
-    //                     'bobot' => $this->cfuserXcfpakar($cfp->cf_pakar, $cfUser)
-    //                 ]);
-    //             }
-    //         }
-    //     }
-
-    //     $penyakits = Penyakit::with('gejala')->latest()->get();
-    //     $bobotGrouping = [];
-
-    //     foreach ($penyakits as $key => $penyakit) {
-    //         $bobotGrouping[$key] = [];
-
-    //         $cfOld = 0;
-    //         foreach ($cfUserXcfPakar as $key2 => $value) {
-    //             if ($value['penyakit_id'] == $penyakit->id) {
-    //                 $cfOld = $this->calculateCFCombine($cfOld, $value['bobot']);
-    //             }
-    //         }
-    //         array_push($bobotGrouping[$key], [
-    //             'penyakit_id' => $penyakit->id,
-    //             'cfOld' => $cfOld
-    //         ]);
-    //     }
-
-    //     $max = 0;
-    //     $fixPenyakitId = 0;
-    //     foreach ($bobotGrouping as $key => $value) {
-    //         foreach ($value as $key2 => $value2) {
-    //             if ($value2['cfOld'] > $max) {
-    //                 $max = $value2['cfOld'];
-    //                 $fixPenyakitId = $value2['penyakit_id'];
-    //             }
-    //         }
-    //     }
-
-    //     $hasil = $max * 100;
-
-    //     if ($hasil < 30) {
-    //         $this->dialog()->show([
-    //             'title'       => 'Informasi!',
-    //             'description' => "Hasil diagnosa kamu tidak lebih dari 30% , yang artinya kamu sehat. Happy nice day",
-    //             'icon'        => 'info'
-    //         ]);
-    //     } else {
-    //         $gejalaPilihan = json_encode($this->bobot);
-    //         $validate = $this->validate();
-    //         $validate['user_id'] = auth()->user()->id;
-    //         $validate['penyakit_id'] = $fixPenyakitId;
-    //         $validate['pilihan_gejala'] = $gejalaPilihan;
-    //         $validate['hasil'] = $hasil;
-
-    //         $diagnosa = Diagnosa::create($validate);
-
-    //         $this->redirect(route('diagnosa.show', $diagnosa->id), navigate: true);
-    //     }
-    // }
 
     public function render()
     {
