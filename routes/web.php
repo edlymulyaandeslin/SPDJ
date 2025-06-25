@@ -25,9 +25,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::view('/', 'welcome', [
-    'penyakits' => Penyakit::orderBy("kode_penyakit","asc")->get()
+    'penyakits' => Penyakit::orderBy("kode_penyakit", "asc")->get()
 ]);
-
 
 Route::view('dashboard', 'dashboard', [
     'title' => 'Dashboard',
